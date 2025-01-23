@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원 가입</title>
+  <script src="./js/regist.js"></script>
+  <link rel="stylesheet" href="./style.css">
+  <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+  <script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/ckeditor.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script>
+    function sample6_execDaumPostcode() {
+      new daum.Postcode({
+        oncomplete: function (data) {
+          var addr = '';
+          var extraAddr = '';
+          if (data.userSelectedType === 'R') {
+            addr = data.roadAddress;
+          } else {
+            addr = data.jibunAddress;
+          }
+          if (data.userSelectedType === 'R') {
+            if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+              extraAddr += data.bname;
+            }
+            if (data.buildingName !== '' && data.apartment === 'Y') {
+              extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+            }
+            if (extraAddr !== '') {
+              extraAddr = ' (' + extraAddr + ')';
+            }
+            document.getElementById("sample6_extraAddress").value = extraAddr;
+          } else {
+            document.getElementById("sample6_extraAddress").value = '';
+          }
+          document.getElementById('sample6_postcode').value = data.zonecode;
+          document.getElementById("sample6_address").value = addr;
+          document.getElementById("sample6_detailAddress").focus();
+        }
+      }).open();
+    }
+
+    function downloadAsImage() {
+      const container = document.querySelector('.container');
+      html2canvas(container).then(canvas => {
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL('image/jpeg');
+        link.download = '회원가입.jpg';
+        link.click();
+      });
+    }
+  </script>
+  <style>
+    .terms {
+      font-size: 12px;
+      /* 글씨 작게 */
+      font-weight: lighter;
+      /* 글씨 가늘게 */
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>* 회원 가입</h2>
+    <hr>
+    <form id="regform">
+
+      <input type="hidden" name="isssn" id="isssn" value="n">
+
+      <div class="section">
+        <p>이름</p> <input type="text" name="userid" id="userid" maxlength="20" class="thisbox">
+      </div>
+
+      <div class="section">
+        <p>연락처</p><input type="text" name="contact" id="contact" maxlength="20" class="thisbox"
+          placeholder="000-0000-0000">
+      </div>
+
+      <div class="section">
+        <p>성별</p>
+        <label><input type="radio" name="gender" value="여자"> 여자</label>
+        <label><input type="radio" name="gender" value="남자"> 남자</label>
+      </div>
+
+      <div class="section">
+        <p>생년월일</p> <input type="text" name="userpw_re" id="userpw_re" maxlength="20" class="thisbox">
+      </div>
+
+      <div class="section">
+        <p>회원권 선택</p>
+        <select name="membership" id="membership" class="thisbox">
+          <option value="New">New</option>
+          <option value="Renew">Renew</option>
+          <option value="Upgrade">Upgrade</option>
+        </select>
+      </div>
+
+      <div class="section">
+        <p>운동복 대여</p><input type="number" name="rental_months" id="rental_months" class="thisbox" min="1">
+      </div>
+
+      <div class="section">
+        <p>라커 대여</p><input type="number" name="locker_months" id="locker_months" class="thisbox" min="0">
+      </div>
+
+      <div class="section">
+        <p>운동목적</p>
+        <label><input type="checkbox" name="goal" value="다이어트"> 다이어트</label>
+        <label><input type="checkbox" name="goal" value="근육증가"> 근육증가</label>
+        <label><input type="checkbox" name="goal" value="체형교정"> 체형교정</label>
+        <label><input type="checkbox" name="goal" value="재활운동"> 재활운동</label>
+      </div>
+
+      <div class="section">
+        <p>기타</p><input type="text" name="other" id="other" class="thisbox" placeholder="직접 입력">
+      </div>
+
+      <div class="section">
+        <p>가입경로</p>
+        <label><input type="checkbox" name="referral" value="간판"> 간판</label>
+        <label><input type="checkbox" name="referral" value="전단지"> 전단지</label>
+        <label><input type="checkbox" name="referral" value="SNS"> SNS</label>
+        <label><input type="checkbox" name="referral" value="인터넷검색"> 인터넷검색</label>
+        <label><input type="checkbox" name="referral" value="지인추천"> 지인추천</label>
+      </div>
+
+      <div class="section">
+        <p>결제</p>
+        <label><input type="checkbox" name="payment" value="카드"> 카드</label>
+        <label><input type="checkbox" name="payment" value="현금"> 현금</label>
+        <label><input type="checkbox" name="payment" value="계좌이체"> 계좌이체</label>
+      </div>
+
+      <div class="section">
+        <div class="postbox">
+          <div class="serchbox">
+            <p>우편번호</p>
+            <input type="text" name="zipcode" id="sample6_postcode" maxlength="5" readonly class="postbox2">
+            <input type="button" value="우편번호 검색" onclick="sample6_execDaumPostcode()">
+          </div>
+          <input type="text" name="address1" id="sample6_address" class="postbox2">
+          <input type="text" name="address2" id="sample6_detailAddress" class="postbox2">
+          <input type="text" name="address3" id="sample6_extraAddress" class="postbox2">
+        </div>
+      </div>
+
+      <!-- 약관 내용 추가 -->
+      <div class="section">
+        <h3>약관 내용</h3>
+        <p class="terms">1. 회원권 휴회: 6개월 1회, 12개월 2회 가능하고, 연기 신청서를 작성시 인정됩니다. 회의 최대 30일까지 휴회가 가능하고, 락카기간은 정지가 불가합니다.<br>
+        </p>
+        <p class="terms">24시 이용안내<br> 야간 서비스는 만 19세 이상부터 이용 가능합니다.<br></p>
+        <p class="terms">환불안내<br> 이용 개시일 전에는 위약금 10%가 공제됩니다.<br></p>
+      </div>
+
+      <div class="section signbox">
+        <p>서명</p>
+        <canvas id="jsCanvas" class="canvas thisbox"></canvas>
+        <script src="./canvas.js"></script>
+      </div>
+
+      <p><button type="button" onclick="downloadAsImage()" class="submitBtn">가입완료</button></p>
+    </form>
+  </div>
+</body>
+
+</html>
